@@ -7,19 +7,30 @@ def extract_dir_path(path):
 
 
 # xxx/xxx/[filename].ext
+# raise on empty.
 def extract_filename(path):
     basename = os.path.basename(path)
     filename, _ = os.path.splitext(basename)
-    if not filename:
+    if basename.startswith('.'):
         raise RuntimeError("filename is empty: " + path)
     return filename
 
 
 # xxx/xxx/filename.[ext]
+# raise on empty.
 def extract_ext(path):
-    root, ext = os.path.splitext(path)
+    basename = os.path.basename(path)
+    filename, ext = os.path.splitext(basename)
+
+    e = RuntimeError("extension is empty: " + path)
+
+    if ext == '.':
+        raise e
+
     if not ext:
-        raise RuntimeError("extension is empty: " + path)
+        if not filename.startswith('.'):
+            raise e
+        ext = filename
     return ext[1:]
 
 
